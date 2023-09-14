@@ -35,10 +35,13 @@ class TasksController < ApplicationController
 
   # PATCH/PUT /tasks/1
   def update
-    if @task.update(task_params)
-      redirect_to @task, notice: "Task was successfully updated.", status: :see_other
-    else
-      render :edit, status: :unprocessable_entity
+    respond_to do |format|
+      if @task.update(task_params)
+        format.turbo_stream
+        format.html { redirect_to @task, notice: "Task was successfully updated.", status: :see_other }
+      else
+        format.html { render :edit, status: :unprocessable_entity }
+      end
     end
   end
 
